@@ -6,16 +6,19 @@
       :class="{selected: selectedMark === mark}"
       @click="selectedMark = mark"
     ) {{mark}}
-  .models
+  .models(v-if="Object.keys(price[selectedMark]).length > 1")
     span.model(
     v-for="model in Object.keys(price[selectedMark])"
     :class="{selected: selectedModel === model}"
     @click="selectedModel = model"
     ) {{model}}
-  .jobs
-    .job(v-for="job in Object.keys(price[selectedMark][selectedModel])")
-      .name {{job}}
-      .price {{price[selectedMark][selectedModel][job]}}
+  .jobs-n-image
+    .jobs
+      .job(v-for="job in Object.keys(price[selectedMark][selectedModel])" v-if="job !== '_image'")
+        .name(v-html="job")
+        .price(v-html="price[selectedMark][selectedModel][job]")
+    .image(v-if="!mobile && price[selectedMark][selectedModel]['_image']")
+      img(:src="price[selectedMark][selectedModel]['_image']")
 
 
 </template>
@@ -39,23 +42,15 @@ export default {
       }
     }
   },
-  methods: {
-    reach(id) {
-      if (!window.yaCounter48187421)
-        return
-      window.yaCounter48187421.reachGoal(id)
-    },
-  },
 }
 </script>
 
 <style scoped lang="stylus">
-brand = #dae8ef
-brand-mark-text = #494648
-brand-model-text = #365c70
-brand-hovered = #eaeff2
+brand = #f52323
+brand-hovered = #f2cdcf
+brand-text = brand-hovered
+price-text = #5e3e40
 div-second-color = #dfebf1
-div-main-color = #c0056b
 .root
   width 100%
   display flex
@@ -93,7 +88,7 @@ div-main-color = #c0056b
     background-color brand-hovered
   &.selected
     background-color brand
-    color: brand-mark-text
+    color: brand-text
 
 .models
   display flex
@@ -118,11 +113,17 @@ div-main-color = #c0056b
     background-color brand-hovered
   &.selected
     background-color brand
-    color: brand-model-text
+    color: brand-text
+
+.jobs-n-image
+  width 95%
+  display flex
+  align-items flex-start
+
+.image
+  margin-left 15px
 
 .jobs
-  width 95%
-
 .job
   width 100%
 
@@ -132,11 +133,11 @@ div-main-color = #c0056b
   display inline-block
   padding 20px 0 16px
   font-size 16px
-  color brand-mark-text
+  color price-text
 
 .name
   text-align left
-  border-bottom 3px solid div-main-color
+  border-bottom 3px solid brand
 .price
   text-align right
   border-bottom 3px solid div-second-color
