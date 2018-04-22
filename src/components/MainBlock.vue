@@ -122,6 +122,7 @@ div-second-color = #dfebf1
 
 .image
   margin-left 15px
+  width 25%
 
 .jobs
 .job
